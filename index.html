@@ -1,5 +1,8 @@
 <html>
     <head>
+        <title>WorldPop</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel='stylesheet' href='css/styles.css'/>
         <link rel='stylesheet' href='css/leaflet.css'/>
         <link rel='manifest' href='manifest.json'/>
@@ -7,7 +10,37 @@
         <script type='text/javascript' src='js/leaflet.js'></script>
     </head>
     <body>
-        <h1>Progressive Web Apps!!!</h1>
-        <img src="image.gif"/>
+        
+<div id='map'></div>
+
+<script>
+	var map = L.map('map').fitWorld();
+
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(map);
+
+	function onLocationFound(e) {
+		var radius = 100;
+
+		L.marker(e.latlng).addTo(map)
+			.bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+		L.circle(e.latlng, radius).addTo(map);
+	}
+
+	function onLocationError(e) {
+		alert(e.message);
+	}
+
+	map.on('locationfound', onLocationFound);
+	map.on('locationerror', onLocationError);
+
+	map.locate({setView: true, maxZoom: 16});
+</script>
     </body>
 </html>
