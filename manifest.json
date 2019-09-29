@@ -1,8 +1,8 @@
 {
   "name": "WorldPop App",
   "short_name": "WorldPop",
-  "theme_color": "#fac100",
-  "background_color": "#fac100",
+  "theme_color": "#fff",
+  "background_color": "#fff",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "./",

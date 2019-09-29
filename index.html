@@ -57,10 +57,33 @@
             map.setView(antarctica, 11);
             var eez2 = L.tileLayer('http://ogc.worldpop.org.uk/geoserver/gwc/service/tms/1.0.0/wpGlobal%3Appp_2019@EPSG%3A900913@png/{z}/{x}/{-y}.png', {
 			tms: true,
-			opacity: 0.99
+			opacity: 0.5
             }).addTo(map);              
             
         }).addTo( map );
+        
+        
+var stateChangingButton = L.easyButton({
+    states: [{
+            stateName: 'zoom-to-forest',        // name the state
+            icon:      '<img src="./images/layers.png">',               // and define its properties
+            title:     'zoom to a forest',      // like its title
+            onClick: function(btn, map) {       // and its callback
+                map.setView([46.25,-121.8],10);
+                btn.state('zoom-to-school');    // change state on click!
+            }
+        }, {
+            stateName: 'zoom-to-school',
+            icon:      '<img src="./images/layers.png">',
+            title:     'zoom to a school',
+            onClick: function(btn, map) {
+                map.setView([42.3748204,-71.1161913],16);
+                btn.state('zoom-to-forest');
+            }
+    }]
+});
+
+stateChangingButton.addTo( map );        
     }
 	
 /*    
