@@ -3,7 +3,7 @@ var staticUrls = [
     './index.html',
     './styles.css',
     './leaflet.css',
-    './js/leaflet.js'
+    './leaflet.js'
 ]
 
 self.addEventListener('install', function(event){
