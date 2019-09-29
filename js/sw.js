@@ -1,7 +1,9 @@
 var staticUrls = [
     './',
     './index.html',
-    './styles.css',
+    './css/styles.css',
+    './css/leaflet.css',
+    './js/leaflet.js',
     './image.gif'
 ]
 
