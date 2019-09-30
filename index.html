@@ -15,7 +15,19 @@
     
     
 <body>
-        
+    <div class="mapbox">
+        <div class="row-fluid some" id="map">
+            <img src="//placehold.it/600x400">
+        </div>
+        <div class="row-fluid overlay">
+            <div class="span1">
+                <button class="btn btn-primary">Button</button>
+            </div>
+            <div class="span2">
+                <button class="btn">Button</button>
+            </div>
+        </div>
+    </div>        
 <div id='map'></div>
 
 <script>
@@ -38,7 +50,10 @@
         var radius = 50;
 	L.marker(latlng).addTo(map)
 			.bindPopup("You are within " + radius + " meters from this point").openPopup();
-
+//
+//
+// https://codepen.io/leemark/pen/vOrXWE
+// 
 //	map.on('locationfound', onLocationFound);
 //	map.on('locationerror', onLocationError);
         //map.flyTo(latlng, 18);
@@ -55,7 +70,7 @@
         L.easyButton('<img src="./images/layers.png">', function(btn, map){
             var antarctica = latlng;
             map.setView(antarctica, 11);
-            var eez2 = L.tileLayer('http://ogc.worldpop.org.uk/geoserver/gwc/service/tms/1.0.0/wpGlobal%3Appp_2019@EPSG%3A900913@png/{z}/{x}/{-y}.png', {
+            var eez2 = L.tileLayer('https://ogc.worldpop.org/geoserver/gwc/service/tms/1.0.0/wpGlobal%3Appp_2019@EPSG%3A900913@png/{z}/{x}/{-y}.png', {
 			tms: true,
 			opacity: 0.5
             }).addTo(map);              
