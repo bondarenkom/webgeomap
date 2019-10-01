@@ -7,27 +7,25 @@
         <link rel='stylesheet' href='leaflet.css'/>
         <link rel='manifest' href='manifest.json'/>
         <link rel="shortcut icon" type="image/x-icon" href="https://bondarenkom.github.io/webgeomap/favicon.ico">
+<!--        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+https://stackoverflow.com/questions/50303454/how-to-use-the-new-material-design-icon-themes-outlined-rounded-two-tone-and
+-->
+        
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+        
         <script type='text/javascript' src='init.js'></script>
         <script type='text/javascript' src='leaflet.js'></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
-<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>        
+<!--        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+        <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>     .   
+-->
+        <link rel='stylesheet' href='./js/easy-button.css'/>
+        <script type='text/javascript' src='./js/easy-button.js'></script>
     </head>
     
     
 <body>
-    <div class="mapbox">
-        <div class="row-fluid some" id="map">
-            <img src="//placehold.it/600x400">
-        </div>
-        <div class="row-fluid overlay">
-            <div class="span1">
-                <button class="btn btn-primary">Button</button>
-            </div>
-            <div class="span2">
-                <button class="btn">Button</button>
-            </div>
-        </div>
-    </div>        
+       
 <div id='map'></div>
 
 <script>
@@ -35,6 +33,14 @@
         navigator.geolocation.getCurrentPosition(displayLocationInfo);
     }
 
+// https://github.com/CliffCloud/Leaflet.EasyButton/issues/48
+function _fixEasyButtonSize(button) {
+    var buttonElement = button.button;
+    buttonElement.style.width = "auto";
+    buttonElement.style.height = "auto";
+    buttonElement.style.minWidth = "26px";
+    buttonElement.style.minHeight = "26px";
+}
     function displayLocationInfo(position) {
         const lng = position.coords.longitude;
         const lat = position.coords.latitude;
@@ -42,14 +48,20 @@
         console.log(`longitude: ${ lng } | latitude: ${ lat }`);
         
         var map = L.map('map').fitWorld();
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		maxZoom: 18
 	}).addTo(map);
         
+        var eez2 = L.tileLayer('https://ogc.worldpop.org/geoserver/gwc/service/tms/1.0.0/wpGlobal%3Appp_2019@EPSG%3A900913@png/{z}/{x}/{-y}.png', {
+			tms: true,
+			opacity: 0.5
+                });         
+        
         var latlng = L.latLng(lat, lng);
         var radius = 50;
 	L.marker(latlng).addTo(map)
-			.bindPopup("You are within " + radius + " meters from this point").openPopup();
+			.bindPopup("Population within " + radius + " meters from this point is ???").openPopup();
 //
 //
 // https://codepen.io/leemark/pen/vOrXWE
@@ -66,39 +78,51 @@
 //			opacity: 0.99
 //	}).addTo(map);        
 
+L.easyButton({
+  id: 'id-for-the-button',  // an id for the generated button
+  position: 'topright',      // inherited from L.Control -- the corner it goes in
+  type: 'replace',          // set to animate when you're comfy with css
+  leafletClasses: true,     // use leaflet classes to style the button?
+  states:[{                 // specify different icons and responses for your button
+    stateName: 'get-center',
+    onClick: function(button, map){
+      alert('Map is centered at: ' + map.getCenter().toString());
+    },
+    title: 'show me the middle',
+    icon: 'fa-crosshairs'
+  }]
+});
 
-        L.easyButton('<img src="./images/layers.png">', function(btn, map){
-            var antarctica = latlng;
-            map.setView(antarctica, 11);
-            var eez2 = L.tileLayer('https://ogc.worldpop.org/geoserver/gwc/service/tms/1.0.0/wpGlobal%3Appp_2019@EPSG%3A900913@png/{z}/{x}/{-y}.png', {
-			tms: true,
-			opacity: 0.5
-            }).addTo(map);              
-            
-        }).addTo( map );
-        
-        
+
+
 var stateChangingButton = L.easyButton({
+    position: 'topright',
     states: [{
+            position: 'topright', 
             stateName: 'zoom-to-forest',        // name the state
-            icon:      '<img src="./images/layers.png">',               // and define its properties
+            icon:      '<i class="material-icons-outlined">layers</i>',               // and define its properties
             title:     'zoom to a forest',      // like its title
             onClick: function(btn, map) {       // and its callback
-                map.setView([46.25,-121.8],10);
-                btn.state('zoom-to-school');    // change state on click!
+                var antarctica = latlng;
+                map.setView(antarctica, 11);
+                eez2.addTo(map);
+                btn.state('zoom-to-school');
             }
         }, {
+            position: 'topright', 
             stateName: 'zoom-to-school',
-            icon:      '<img src="./images/layers.png">',
+            icon:      '<i class="material-icons">layers</i>',
             title:     'zoom to a school',
             onClick: function(btn, map) {
-                map.setView([42.3748204,-71.1161913],16);
+                eez2.remove(map);
                 btn.state('zoom-to-forest');
             }
     }]
 });
 
-stateChangingButton.addTo( map );        
+stateChangingButton.addTo( map );   
+
+_fixEasyButtonSize(stateChangingButton);
     }
 	
 /*    
